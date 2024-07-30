@@ -1,12 +1,23 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useInView } from 'react-intersection-observer'
+import { useActiveSectionContext } from '@/context/active-section-context'
 
 const About = () => {
+  const { ref, inView } = useInView({ threshold: 0.75 })
+  const { timeOfLastClick, setActiveSection } = useActiveSectionContext()
+
+  useEffect(() => {
+    if (inView && Date.now() - timeOfLastClick > 1000) setActiveSection('About')
+  }, [inView, setActiveSection, timeOfLastClick])
+
   return (
     <motion.section
-      className='sm:mt-44 mb-28 max-w-[45rem] text-center leading-8 sm:mb-40'
+      ref={ref}
+      id='about'
+      className='sm:mt-44 mb-28 max-w-[45rem] text-center leading-8 sm:mb-40 scroll-mt-28'
       initial={{ y: 200, opacity: 0 }}
       whileInView={{ y: 0, opacity: 1 }}
       viewport={{ once: true, margin: '-200px' }}
